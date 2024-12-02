@@ -480,18 +480,33 @@ Afim de estabilizar a variância das variáveis no tempo, foi aplicada uma trans
 
 \begin{figure}[h!]
 	\caption*{Gráfico 6: Logaritmo das séries}
-	\includegraphics[width=\textwidth]{metodologia/logaritmo}
+	\includegraphics[width=0.7\textwidth]{metodologia/logaritmo}
 	\caption*{Fonte: Elaborado pelo autor}
 \end{figure}
 
-Como pode ser visto no gráfico, e confirmado com a aplicação de um teste Dickey-Fuller aumentado, as séries apresentam raízes unitárias, e com um teste de cointegração de Johansen, foi corroborada a presença de cointegração entre as séries das receitas e gastos. Em seguida, foram testadas ordens para o modelo até um lag máximo de 20 períodos, ou seja, cinco anos, de acordo com o tempo de resposta utilizado na literatura vista. Para selecionar a ordem mais adequada, foi utilizado o Critério de Informação de Akaike (AIC). O teste de traço foi utilizado para definir o rank de cointegração das séries. A ordem ótima encontrada foi 20, enquanto o rank de cointegração foi 2. A equação do modelo ajustado ficou: 
+Como pode ser visto no gráfico, e confirmado com a aplicação de um teste Dickey-Fuller aumentado, as séries apresentam raízes unitárias. A aplicação do teste de cointegração de Johansen corroborou a presença de cointegração entre as séries das receitas e dos gastos públicos. Essa relação de cointegração justifica o uso de um VECM.
+
+Para definir a ordem de defasagem mais adequada, foi utilizado o Critério de Informação de Akaike (AIC), considerando um máximo de 20 períodos (cinco anos, em linha com a literatura). O teste de traço foi usado para determinar o rank de cointegração das séries. Os resultados indicaram uma ordem ótima de 20 e um rank de cointegração igual a 2. O modelo estimado foi especificado da seguinte forma:
 
 
-% \begin{equation}
-% 	\text{equação do bagulho aqui}
-% \end{equation}
-%
-%
+
+\begin{equation}
+	\Delta \mathbf{X_t} = \mathbf{\Pi} \mathbf{Z}_{t-1} + \sum_{i=1}^{20} \mathbf{\Gamma}_i \Delta \mathbf{X}_{t-i} + u_t
+\end{equation}
+
+
+Onde o vetor $\Delta \mathbf{X}_t$ representa as primeiras diferenças das variáveis endógenas ($\Delta T_t$, $\Delta G_t$ e $\Delta Y_t$), correspondendo às variações de um período para o outro.
+
+A matriz $\mathbf{\Pi}$ descreve as relações de longo prazo entre as variáveis e é decomposta em dois componentes principais: $\mathbf{\alpha}$, a matriz de coeficientes de ajuste, e $\mathbf{\beta}^\mathsf{T}$, a matriz dos vetores de cointegração. A matriz $\mathbf{\alpha}$ mede a velocidade com que cada variável endógena ajusta-se para corrigir os desequilíbrios em relação ao equilíbrio de longo prazo. Já $\mathbf{\beta}^\mathsf{T}$ é quem descreve esse equilíbrio de longo prazo entre as variáveis, contendo as combinações lineares das variáveis em nível, que formam as relações estáveis ao longo do tempo, incluindo uma constante que captura tendências persistentes.
+
+O vetor $\mathbf{Z}_{t-1}$ agrupa os níveis das variáveis endógenas no período anterior ($T_{t-1}$, $G_{t-1}$, $Y_{t-1}$) e a constante implícita. Ele representa as informações necessárias para capturar os desequilíbrios de longo prazo entre as variáveis, garantindo que o modelo respeite as relações de cointegração identificadas.
+
+As matrizes $\mathbf{\Gamma}_i$ representam os coeficientes associados às diferenças defasadas das variáveis ($\Delta T_{t-i}$, $\Delta G_{t-i}$, $\Delta Y_{t-i}$) até a vigésima defasagem. Elas capturam as dinâmicas de curto prazo, ou seja, as interações contemporâneas e as relações defasadas entre as variáveis no horizonte analisado (cinco anos). Esses coeficientes são fundamentais para modelar o impacto que choques em períodos anteriores têm sobre o comportamento atual das variáveis endógenas.
+
+Por fim, o vetor $u_t$ corresponde aos termos de erro do modelo, representando os choques não explicados pelas variáveis endógenas.
+
+
+
 % --------------------------- Resultados --------------------------- %
 \chapter{Resultados}
 Para averiguar a confiabilidade dos resultados, foi realizada uma análise dos resíduos do modelo, que nos permite ver se existe alguma relação não capturada pelo modelo e definir se os intervalos de confiança estimados para as IRF serão confiáveis. Testes de Ljung-Box confirmaram que não existe auto-correlação dos resíduos das séries, e testes de Anderson-Darling confirmaram a normalidade de suas distribuições. Assim, as IRF e seus intervalos de confiança são estatisticamente confiáveis. Desta forma, os gráficos das Funções de Impulso-Resposta e discussões sobre os resultados estão disponibilizados a seguir.
@@ -564,6 +579,24 @@ O efeito prático do aumento sistêmico da atuação do estado na economia por m
 
 
 % \begin{apendicesenv}
+
+\begin{itemize}
+	\item $\Delta \mathbf{X}_t = \begin{bmatrix} \Delta T_t & \Delta G_t & \Delta Y_t \end{bmatrix}^\mathsf{T}$
+	\item $Z_{t-1} = \begin{bmatrix}
+			T_{t-1} & G_{t-1} & Y_{t-1} & 1
+	\end{bmatrix}^\mathsf{T}$
+	\item $\Pi = \alpha \beta^\mathsf{T},\text{ No qual:}$
+	\begin{itemize}
+		\item $\alpha = \begin{bmatrix}
+				\alpha_{11} & \alpha{21} \\
+				\alpha_{12} & \alpha{22} \\
+				\alpha_{13} & \alpha{23}
+			\end{bmatrix}$
+            \item \(\beta'\): matriz \(3 \times 2\) que descreve as combinações lineares cointegradas das variáveis.
+        \end{itemize}
+    \item \(\Gamma_i\): matrizes \(3 \times 3\) de coeficientes das diferenças defasadas, que capturam a dinâmica de curto prazo.
+    \item \(u_t\): vetor \(3 \times 1\) de termos de erro.
+\end{itemize}
 
 % % Imprime uma página indicando o início dos apêndices
 %\partapendices
