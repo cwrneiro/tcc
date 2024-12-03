@@ -6,6 +6,7 @@
 
 	% Pacotes utilizados no modelo (nem todos precisam estar presentes para a execução da sua monografia)
 	\usepackage{times}			% Usa a fonte Times Roman, com compatibilidade matemática
+	\usepackage{longtable}			% Usa a fonte Times Roman, com compatibilidade matemática
 	\usepackage[T1]{fontenc}		% Seleção de códigos de fonte.
 	\usepackage[utf8]{inputenc}		% Codificação do documento (conversão automática dos acentos)
 	\usepackage{indentfirst}		% Indenta o primeiro parágrafo de cada seção.
@@ -287,8 +288,8 @@
 	  
 	\end{folhadeaprovacao}
 
-	\begin{agradecimentos}
-	\end{agradecimentos}
+	% \begin{agradecimentos}
+	% \end{agradecimentos}
 
 
 	% Resumo e abstract
@@ -443,7 +444,7 @@ Eduardo Duhalde assume a presidência em 2002 e encerra a paridade cambial, perm
 
 A rápida desvalorização do peso argentino, causada pela correção dos preços na ausência da paridade cambial, fez subir o valor em pesos argentinos de parte da dívida pública que era denominado em dólares (Gráfico 5)
 
-\begin{figure}[h!]
+\begin{figure}[!ht]
 	\caption*{Gráfico 5: Dívida pública (\% do PIB)}
 	\includegraphics[width=\textwidth]{dados/divida_publica}
 	\caption*{Fonte: FMI, elaborado pelo autor}
@@ -468,19 +469,17 @@ Atualmente, com a insatisfação geral em relação à persistente inflação e 
 
 % -------------------------- Metodologia --------------------------- %
 \chapter{Metodologia}
-% aqui vou introduzir o VECM, citar que é uma extensão do VAR, um modelo de regressão multivariado que trata todas as variáveis como interdependentes (dá pra falar do blanchard e bancos centrais ainda), porém, além de ser capaz de capturar relações de curto prazo, o VECM incorpora relações de longo prazo entre as variáveis, e é mais indicado pra lidar com séries temporais cointegradas, em outras palavras, séries que possuem relações estáveis de longo prazo Aqui vou citar também o teste de cointegração de johansen, que confirmou presença de cointegração entre as séries de gastos e receitas
 
 Variáveis econômicas interagem entre si através de mecanismos complexos, e muitas vezes, essas interações não são corretamente capturadas quando analisadas através de métodos mais simples, como regressões lineares. O Modelo Vetorial de Correção de Erros (VECM) é uma extensão do modelo Vetorial Auto-Regressivo (VAR), que é um modelo de regressão multivariado que trata todas as variáveis como interdependentes, e desta forma, é capaz de capturar melhor as interações das variáveis. O VAR é utilizado na literatura para estimação do efeito de choques fiscais na economia \cite{Blanchard2002}, e historicamente por bancos centrais para estimações de crescimento e comportamento da economia, assim como análises do possível resultado de políticas fiscais e monetárias \cite{bcb_relatorio_inflacao_2010}. Porém, apesar de ser adequado para relações de curto prazo, o VAR possui limitações ao analisar séries com relações de longo prazo. O VECM, por sua vez, incorpora essas relações de longo prazo no modelo, sendo capaz de lidar com séries temporais cointegradas, ou seja, séries que possuem relações estáveis de longo prazo.
 
 Uma importante ferramenta disponibilizada pela utilização de modelos vetoriais que incorporam relações dinâmicas entre as variáveis é a Função Impulso-Resposta (IRF), que nos permite analisar o comportamento de variáveis de interesse diante de choques nas variáveis do sistema. A IRF será utilizada aqui para estimar o efeito que choques nos gastos e receitas do governo tem no PIB per capita argentino.
 
 Para todos os teste de hipótese que se seguem, será adotado um intervalo de confiança de 95\%.
+Ainda, afim de estabilizar a variância das variáveis no tempo, foi aplicada uma transformação logarítmica, resultando na seguintes séries:
 
-Afim de estabilizar a variância das variáveis no tempo, foi aplicada uma transformação logaritmica, resultando na seguintes séries:
-
-\begin{figure}[h!]
+\begin{figure}[!htb]
 	\caption*{Gráfico 6: Logaritmo das séries}
-	\includegraphics[width=0.7\textwidth]{metodologia/logaritmo}
+	\includegraphics[width=.799\textwidth]{metodologia/logaritmo}
 	\caption*{Fonte: Elaborado pelo autor}
 \end{figure}
 
@@ -504,6 +503,9 @@ O vetor $\mathbf{Z}_{t-1}$ agrupa os níveis das variáveis endógenas no perío
 As matrizes $\mathbf{\Gamma}_i$ representam os coeficientes associados às diferenças defasadas das variáveis ($\Delta T_{t-i}$, $\Delta G_{t-i}$, $\Delta Y_{t-i}$) até a vigésima defasagem. Elas capturam as dinâmicas de curto prazo, ou seja, as interações contemporâneas e as relações defasadas entre as variáveis no horizonte analisado (cinco anos). Esses coeficientes são fundamentais para modelar o impacto que choques em períodos anteriores têm sobre o comportamento atual das variáveis endógenas.
 
 Por fim, o vetor $u_t$ corresponde aos termos de erro do modelo, representando os choques não explicados pelas variáveis endógenas.
+
+Para uma análise completa, os valores detalhados das matrizes do modelo e os testes de diagnóstico estão disponíveis no Apêndice A: Resultados do Modelo VECM.
+
 
 
 
@@ -551,14 +553,525 @@ O efeito prático do aumento sistêmico da atuação do estado na economia por m
 \bibliography{bib} % sem a extensão .bib
 
 % Apêndices
-% \begin{apendicesenv}
+\begin{apendicesenv}
 %
 % Imprime uma página indicando o início dos apêndices
-% \partapendices
+\partapendices
+
+\chapter{Resultados do Modelo VECM}
+
+Para todos os coeficientes aqui apresentados, a interpretação dos subscritos $i$, $j$ e $k$ (quando presente) de uma variável $x_{ij,k}$ é a seguinte: o subscrito $i$ indica a variável endógena correspondente, $j$ refere-se à variável explicativa, e $k$ indica a defasagem (se aplicável). Assim, um coeficiente $x_{ij,k}$ é interpretado como "coeficiente $x$ da variável $i$, referente à variável $j$, na defasagem $k$". A relação entre os números e as variáveis está apresentada abaixo:
+
+\[
+	\begin{array}{c|c}
+		\text{Número} & \text{Variável} \\
+		\hline
+		1 & Receita \\ 
+		2 & Gasto \\
+		3 & PIB \\
+	\end{array}
+\]
+
+Desta forma, o coeficiente $\alpha_{32}$ é interpretado como "a velocidade de ajuste ao equilíbrio do PIB a um choque nos gastos". Já o coeficiente $\gamma_{31,4}$ é interpretado como "a resposta de curto prazo do PIB a um choque na receita defasado em 4 trimestres".
 
 
+\section{Matriz de Ajuste ($\mathbf{\alpha}$)}
+A matriz $\mathbf{\alpha}$ mede a velocidade com que as variáveis endógenas ajustam-se para corrigir os desequilíbrios de longo prazo:
 
-% \end{apendicesenv}
+\[
+	\mathbf{\alpha} =
+	\begin{bmatrix}
+		-0.2009 & -0.2780 \\
+		-0.9766 &  0.4188 \\
+		2.5493 & -1.5182
+	\end{bmatrix}
+\]
+
+\section{Matriz dos Vetores de Cointegração (\(\mathbf{\beta}^\mathsf{T}\))}
+A matriz \(\mathbf{\beta}^\mathsf{T}\) descreve as relações de longo prazo entre as variáveis, incluindo a constante:
+
+\[
+	\mathbf{\beta}^\mathsf{T} =
+	\begin{bmatrix}
+		1 & -1.386 \times 10^{-16} & -0.3247 & 0.3035 \\
+		-3.104 \times 10^{-18} & 1 & -0.3832 & 0.3837
+	\end{bmatrix}
+\]
+
+Os termos na última coluna representam as constantes associadas a cada vetor de cointegração.
+
+\section{Coeficientes das Diferenças Defasadas ($\mathbf{\Gamma}_i$)}
+As matrizes \(\mathbf{\Gamma}_i\) capturam as dinâmicas de curto prazo entre as variáveis para cada defasagem (\(i = 1, \dots, 20\)). Por questões de espaço, apresenta-se aqui apenas a matriz referente à primeira defasagem:
+
+\[
+	\mathbf{\Gamma}_1 =
+	\begin{bmatrix}
+		-0.2116 &  0.2820 & -0.2705 \\
+		1.3299 & -1.1077 & -0.4853 \\
+		-2.8722 &  2.5813 &  0.6206 \\
+	\end{bmatrix}
+\]
+
+Os outros coeficientes das matrizes $\mathbf{\Gamma}_i$ estão disponíveis a seguir na seção de valores estatísticos.
+
+\section{Valores Estatísticos}
+
+\subsection{Matriz $\mathbf{\alpha}$ - Coeficientes e $p$-valores}
+
+Os coeficientes da matriz $\mathbf{\alpha}$ e seus respectivos \(p\)-valores são apresentados na tabela abaixo:
+
+\begin{table}[h!]
+	\centering
+	\caption{Coeficientes e \(p\)-valores da matriz $\mathbf{\alpha}$}
+	\begin{tabular}{|c|c|c|}
+		\hline
+		\textbf{Coeficiente} & \textbf{Valor} & \textbf{\(p\)-valor} \\ \hline
+		$\alpha_{11}$ & -0.2009 & 0.660 \\ \hline
+		$\alpha_{12}$ & -0.2780 & 0.395 \\ \hline
+		$\alpha_{21}$ & -0.9766 & 0.058 \\ \hline
+		$\alpha_{22}$ &  0.4188 & 0.255 \\ \hline
+		$\alpha_{31}$ &  2.5493 & 0.000 \\ \hline
+		$\alpha_{32}$ & -1.5182 & 0.000 \\ \hline
+	\end{tabular}
+	\caption*{Fonte: Elaborado pelo autor}
+\end{table}
+
+\subsection{Matriz $\mathbf{\beta}$ - Coeficientes e $p$-valores}
+
+Os coeficientes dos vetores de cointegração da matriz $\mathbf{\beta}$ e seus respectivos \(p\)-valores são apresentados na tabela abaixo:
+
+\begin{table}[h!]
+	\centering
+	\caption{Coeficientes e $p$-valores da matriz $\mathbf{\beta}$}
+	\begin{tabular}{|c|c|c|}
+		\hline
+		\textbf{Coeficiente} & \textbf{Valor} & \textbf{\(p\)-valor} \\ \hline
+		$\beta_{11}$ & 1.0000 & 0.000 \\ \hline
+		$\beta_{12}$ & -1.386 $\times 10^{-16}$ & 0.000 \\ \hline
+		$\beta_{13}$ & -0.3247 & 0.000 \\ \hline
+		$\beta_{14}$ & 0.3035 & 0.000 \\ \hline
+		$\beta_{21}$ & -3.104 $\times 10^{-18}$ & 0.000 \\ \hline
+		$\beta_{22}$ & 1.0000 & 0.000 \\ \hline
+		$\beta_{23}$ & -0.3832 & 0.000 \\ \hline
+		$\beta_{24}$ & 0.3837 & 0.000 \\ \hline
+	\end{tabular}
+	\caption*{Fonte: Elaborado pelo autor}
+\end{table}
+
+\subsection{Matriz $\mathbf{\Gamma}$ - Coeficientes e $p$-valores}
+
+Os coeficientes das diferenças defasadas da matriz $\mathbf{\Gamma}$ e seus respectivos $p$-valores são apresentados na tabela abaixo:
+
+\begin{longtable}{|c|c|c|}
+	\caption{Coeficientes e \(p\)-valores de $\mathbf{\Gamma}$} \\ \hline
+	\textbf{Coeficiente} & \textbf{Valor} & \textbf{\(p\)-valor} \\ \hline
+	\endfirsthead
+	\hline
+	\textbf{Coeficiente} & \textbf{Valor} & \textbf{\(p\)-valor} \\ \hline
+	\endhead
+	\hline
+	\endfoot
+	\endlastfoot
+	$\gamma_{11,1}$ & -0.2116 & 0.6743 \\
+	\hline
+	$\gamma_{12,1}$ & 1.3299 & 0.0189 \\
+	\hline
+	$\gamma_{13,1}$ & -2.8722 & 0.0000 \\
+	\hline
+	$\gamma_{21,1}$ & 0.2820 & 0.4637 \\
+	\hline
+	$\gamma_{22,1}$ & -1.1077 & 0.0105 \\
+	\hline
+	$\gamma_{23,1}$ & 2.5813 & 0.0000 \\
+	\hline
+	$\gamma_{31,1}$ & -0.2705 & 0.0062 \\
+	\hline
+	$\gamma_{32,1}$ & -0.4853 & 0.0000 \\
+	\hline
+	$\gamma_{33,1}$ & 0.6206 & 0.0000 \\
+	\hline
+	$\gamma_{11,2}$ & 0.1469 & 0.7763 \\
+	\hline
+	$\gamma_{12,2}$ & 1.6585 & 0.0044 \\
+	\hline
+	$\gamma_{13,2}$ & -2.8592 & 0.0000 \\
+	\hline
+	$\gamma_{21,2}$ & 0.4303 & 0.2832 \\
+	\hline
+	$\gamma_{22,2}$ & -0.6875 & 0.1276 \\
+	\hline
+	$\gamma_{23,2}$ & 1.8744 & 0.0000 \\
+	\hline
+	$\gamma_{31,2}$ & -0.0144 & 0.8931 \\
+	\hline
+	$\gamma_{32,2}$ & 0.0418 & 0.7283 \\
+	\hline
+	$\gamma_{33,2}$ & 0.3494 & 0.0036 \\
+	\hline
+	$\gamma_{11,3}$ & 0.2083 & 0.6945 \\
+	\hline
+	$\gamma_{12,3}$ & 1.5958 & 0.0075 \\
+	\hline
+	$\gamma_{13,3}$ & -2.1855 & 0.0002 \\
+	\hline
+	$\gamma_{21,3}$ & 0.4520 & 0.2747 \\
+	\hline
+	$\gamma_{22,3}$ & -0.6669 & 0.1521 \\
+	\hline
+	$\gamma_{23,3}$ & 1.0247 & 0.0274 \\
+	\hline
+	$\gamma_{31,3}$ & 0.0203 & 0.8515 \\
+	\hline
+	$\gamma_{32,3}$ & 0.1491 & 0.2213 \\
+	\hline
+	$\gamma_{33,3}$ & -0.1698 & 0.1625 \\
+	\hline
+	$\gamma_{11,4}$ & 0.5929 & 0.2512 \\
+	\hline
+	$\gamma_{12,4}$ & 2.4171 & 0.0000 \\
+	\hline
+	$\gamma_{13,4}$ & -2.7100 & 0.0000 \\
+	\hline
+	$\gamma_{21,4}$ & -0.2511 & 0.5137 \\
+	\hline
+	$\gamma_{22,4}$ & -1.6960 & 0.0001 \\
+	\hline
+	$\gamma_{23,4}$ & 1.6834 & 0.0001 \\
+	\hline
+	$\gamma_{31,4}$ & -0.0063 & 0.9533 \\
+	\hline
+	$\gamma_{32,4}$ & -0.0129 & 0.9156 \\
+	\hline
+	$\gamma_{33,4}$ & -0.2179 & 0.0718 \\
+	\hline
+	$\gamma_{11,5}$ & 0.3773 & 0.4817 \\
+	\hline
+	$\gamma_{12,5}$ & 1.8221 & 0.0025 \\
+	\hline
+	$\gamma_{13,5}$ & -2.7748 & 0.0000 \\
+	\hline
+	$\gamma_{21,5}$ & -0.3387 & 0.3912 \\
+	\hline
+	$\gamma_{22,5}$ & -1.5502 & 0.0005 \\
+	\hline
+	$\gamma_{23,5}$ & 2.1967 & 0.0000 \\
+	\hline
+	$\gamma_{31,5}$ & -0.3339 & 0.0015 \\
+	\hline
+	$\gamma_{32,5}$ & -0.4864 & 0.0000 \\
+	\hline
+	$\gamma_{33,5}$ & 0.1839 & 0.1192 \\
+	\hline
+	$\gamma_{11,6}$ & -0.2222 & 0.6723 \\
+	\hline
+	$\gamma_{12,6}$ & 1.0331 & 0.0805 \\
+	\hline
+	$\gamma_{13,6}$ & -2.1950 & 0.0002 \\
+	\hline
+	$\gamma_{21,6}$ & 0.5824 & 0.1445 \\
+	\hline
+	$\gamma_{22,6}$ & -0.1663 & 0.7112 \\
+	\hline
+	$\gamma_{23,6}$ & 1.7373 & 0.0001 \\
+	\hline
+	$\gamma_{31,6}$ & -0.1229 & 0.2658 \\
+	\hline
+	$\gamma_{32,6}$ & 0.0263 & 0.8324 \\
+	\hline
+	$\gamma_{33,6}$ & 0.2904 & 0.0192 \\
+	\hline
+	$\gamma_{11,7}$ & 0.0157 & 0.9753 \\
+	\hline
+	$\gamma_{12,7}$ & 1.3268 & 0.0196 \\
+	\hline
+	$\gamma_{13,7}$ & -1.6296 & 0.0041 \\
+	\hline
+	$\gamma_{21,7}$ & 0.3114 & 0.4047 \\
+	\hline
+	$\gamma_{22,7}$ & -0.7464 & 0.0759 \\
+	\hline
+	$\gamma_{23,7}$ & 0.9812 & 0.0194 \\
+	\hline
+	$\gamma_{31,7}$ & 0.0532 & 0.6300 \\
+	\hline
+	$\gamma_{32,7}$ & 0.0846 & 0.4963 \\
+	\hline
+	$\gamma_{33,7}$ & 0.2579 & 0.0376 \\
+	\hline
+	$\gamma_{11,8}$ & 0.4078 & 0.3958 \\
+	\hline
+	$\gamma_{12,8}$ & 1.7656 & 0.0011 \\
+	\hline
+	$\gamma_{13,8}$ & -2.0240 & 0.0002 \\
+	\hline
+	$\gamma_{21,8}$ & -0.1028 & 0.7788 \\
+	\hline
+	$\gamma_{22,8}$ & -1.1084 & 0.0071 \\
+	\hline
+	$\gamma_{23,8}$ & 1.1356 & 0.0057 \\
+	\hline
+	$\gamma_{31,8}$ & 0.0408 & 0.6963 \\
+	\hline
+	$\gamma_{32,8}$ & 0.0848 & 0.4710 \\
+	\hline
+	$\gamma_{33,8}$ & -0.3630 & 0.0020 \\
+	\hline
+	$\gamma_{11,9}$ & 0.6003 & 0.2015 \\
+	\hline
+	$\gamma_{12,9}$ & 1.3509 & 0.0106 \\
+	\hline
+	$\gamma_{13,9}$ & -2.1350 & 0.0001 \\
+	\hline
+	$\gamma_{21,9}$ & -0.4853 & 0.1671 \\
+	\hline
+	$\gamma_{22,9}$ & -1.2113 & 0.0022 \\
+	\hline
+	$\gamma_{23,9}$ & 1.7914 & 0.0000 \\
+	\hline
+	$\gamma_{31,9}$ & -0.2270 & 0.0296 \\
+	\hline
+	$\gamma_{32,9}$ & -0.3307 & 0.0049 \\
+	\hline
+	$\gamma_{33,9}$ & 0.0352 & 0.7640 \\
+	\hline
+	$\gamma_{11,10}$ & -0.0077 & 0.9862 \\
+	\hline
+	$\gamma_{12,10}$ & 0.5111 & 0.3069 \\
+	\hline
+	$\gamma_{13,10}$ & -1.6497 & 0.0009 \\
+	\hline
+	$\gamma_{21,10}$ & 0.2201 & 0.5147 \\
+	\hline
+	$\gamma_{22,10}$ & -0.0982 & 0.7961 \\
+	\hline
+	$\gamma_{23,10}$ & 1.3375 & 0.0004 \\
+	\hline
+	$\gamma_{31,10}$ & -0.1671 & 0.1112 \\
+	\hline
+	$\gamma_{32,10}$ & 0.0804 & 0.4958 \\
+	\hline
+	$\gamma_{33,10}$ & 0.2745 & 0.0198 \\
+	\hline
+	$\gamma_{11,11}$ & -0.2567 & 0.5509 \\
+	\hline
+	$\gamma_{12,11}$ & 0.1626 & 0.7372 \\
+	\hline
+	$\gamma_{13,11}$ & -0.7469 & 0.1222 \\
+	\hline
+	$\gamma_{21,11}$ & 0.3467 & 0.2836 \\
+	\hline
+	$\gamma_{22,11}$ & -0.1099 & 0.7627 \\
+	\hline
+	$\gamma_{23,11}$ & 0.7771 & 0.0323 \\
+	\hline
+	$\gamma_{31,11}$ & -0.0356 & 0.7609 \\
+	\hline
+	$\gamma_{32,11}$ & 0.1555 & 0.2379 \\
+	\hline
+	$\gamma_{33,11}$ & 0.0833 & 0.5264 \\
+	\hline
+	$\gamma_{11,12}$ & 0.0366 & 0.9300 \\
+	\hline
+	$\gamma_{12,12}$ & 0.4416 & 0.3470 \\
+	\hline
+	$\gamma_{13,12}$ & -1.0527 & 0.0246 \\
+	\hline
+	$\gamma_{21,12}$ & -0.1733 & 0.5896 \\
+	\hline
+	$\gamma_{22,12}$ & -0.5838 & 0.1064 \\
+	\hline
+	$\gamma_{23,12}$ & 0.5294 & 0.1422 \\
+	\hline
+	$\gamma_{31,12}$ & -0.1739 & 0.0952 \\
+	\hline
+	$\gamma_{32,12}$ & -0.1354 & 0.2484 \\
+	\hline
+	$\gamma_{33,12}$ & -0.0647 & 0.5801 \\
+	\hline
+	$\gamma_{11,13}$ & 0.2690 & 0.4934 \\
+	\hline
+	$\gamma_{12,13}$ & 0.6919 & 0.1174 \\
+	\hline
+	$\gamma_{13,13}$ & -1.7161 & 0.0001 \\
+	\hline
+	$\gamma_{21,13}$ & -0.3315 & 0.2600 \\
+	\hline
+	$\gamma_{22,13}$ & -0.7956 & 0.0163 \\
+	\hline
+	$\gamma_{23,13}$ & 1.5998 & 0.0000 \\
+	\hline
+	$\gamma_{31,13}$ & -0.1707 & 0.0884 \\
+	\hline
+	$\gamma_{32,13}$ & -0.3078 & 0.0063 \\
+	\hline
+	$\gamma_{33,13}$ & 0.0856 & 0.4466 \\
+	\hline
+	$\gamma_{11,14}$ & 0.7678 & 0.0438 \\
+	\hline
+	$\gamma_{12,14}$ & 1.2443 & 0.0037 \\
+	\hline
+	$\gamma_{13,14}$ & -2.2603 & 0.0000 \\
+	\hline
+	$\gamma_{21,14}$ & -0.1840 & 0.5246 \\
+	\hline
+	$\gamma_{22,14}$ & -0.0671 & 0.8367 \\
+	\hline
+	$\gamma_{23,14}$ & 1.2002 & 0.0002 \\
+	\hline
+	$\gamma_{31,14}$ & 0.0892 & 0.3691 \\
+	\hline
+	$\gamma_{32,14}$ & 0.3735 & 0.0008 \\
+	\hline
+	$\gamma_{33,14}$ & -0.0447 & 0.6882 \\
+	\hline
+	$\gamma_{11,15}$ & 0.7570 & 0.0497 \\
+	\hline
+	$\gamma_{12,15}$ & 1.3082 & 0.0026 \\
+	\hline
+	$\gamma_{13,15}$ & -1.6784 & 0.0001 \\
+	\hline
+	$\gamma_{21,15}$ & -0.3605 & 0.2032 \\
+	\hline
+	$\gamma_{22,15}$ & -1.0020 & 0.0017 \\
+	\hline
+	$\gamma_{23,15}$ & 0.6773 & 0.0332 \\
+	\hline
+	$\gamma_{31,15}$ & 0.0375 & 0.7246 \\
+	\hline
+	$\gamma_{32,15}$ & 0.2068 & 0.0842 \\
+	\hline
+	$\gamma_{33,15}$ & 0.0805 & 0.5007 \\
+	\hline
+	$\gamma_{11,16}$ & 0.3835 & 0.3013 \\
+	\hline
+	$\gamma_{12,16}$ & 0.8509 & 0.0415 \\
+	\hline
+	$\gamma_{13,16}$ & -1.3700 & 0.0010 \\
+	\hline
+	$\gamma_{21,16}$ & -0.5011 & 0.0687 \\
+	\hline
+	$\gamma_{22,16}$ & -1.1626 & 0.0002 \\
+	\hline
+	$\gamma_{23,16}$ & 1.2181 & 0.0001 \\
+	\hline
+	$\gamma_{31,16}$ & -0.2764 & 0.0063 \\
+	\hline
+	$\gamma_{32,16}$ & -0.2511 & 0.0273 \\
+	\hline
+	$\gamma_{33,16}$ & -0.0893 & 0.4314 \\
+	\hline
+	$\gamma_{11,17}$ & 0.3312 & 0.3202 \\
+	\hline
+	$\gamma_{12,17}$ & 0.6735 & 0.0724 \\
+	\hline
+	$\gamma_{13,17}$ & -1.0707 & 0.0042 \\
+	\hline
+	$\gamma_{21,17}$ & -0.3745 & 0.1730 \\
+	\hline
+	$\gamma_{22,17}$ & -0.9684 & 0.0017 \\
+	\hline
+	$\gamma_{23,17}$ & 1.2691 & 0.0000 \\
+	\hline
+	$\gamma_{31,17}$ & -0.1677 & 0.1156 \\
+	\hline
+	$\gamma_{32,17}$ & -0.1919 & 0.1095 \\
+	\hline
+	$\gamma_{33,17}$ & 0.1337 & 0.2638 \\
+	\hline
+	$\gamma_{11,18}$ & 0.3750 & 0.2505 \\
+	\hline
+	$\gamma_{12,18}$ & 0.4942 & 0.1784 \\
+	\hline
+	$\gamma_{13,18}$ & -1.3552 & 0.0002 \\
+	\hline
+	$\gamma_{21,18}$ & 0.2020 & 0.4955 \\
+	\hline
+	$\gamma_{22,18}$ & -0.0800 & 0.8104 \\
+	\hline
+	$\gamma_{23,18}$ & 1.3715 & 0.0000 \\
+	\hline
+	$\gamma_{31,18}$ & 0.0146 & 0.8853 \\
+	\hline
+	$\gamma_{32,18}$ & 0.0306 & 0.7884 \\
+	\hline
+	$\gamma_{33,18}$ & 0.0891 & 0.4341 \\
+	\hline
+	$\gamma_{11,19}$ & 0.5818 & 0.0571 \\
+	\hline
+	$\gamma_{12,19}$ & 0.8263 & 0.0163 \\
+	\hline
+	$\gamma_{13,19}$ & -0.6726 & 0.0501 \\
+	\hline
+	$\gamma_{21,19}$ & 0.5430 & 0.0438 \\
+	\hline
+	$\gamma_{22,19}$ & -0.0571 & 0.8506 \\
+	\hline
+	$\gamma_{23,19}$ & 0.1163 & 0.7006 \\
+	\hline
+	$\gamma_{31,19}$ & 0.3170 & 0.0013 \\
+	\hline
+	$\gamma_{32,19}$ & 0.4877 & 0.0000 \\
+	\hline
+	$\gamma_{33,19}$ & -0.2268 & 0.0409 \\
+	\hline
+	$\gamma_{11,20}$ & 0.4653 & 0.0537 \\
+	\hline
+	$\gamma_{12,20}$ & 0.7463 & 0.0060 \\
+	\hline
+	$\gamma_{13,20}$ & -0.7618 & 0.0049 \\
+	\hline
+	$\gamma_{21,20}$ & -0.4204 & 0.1111 \\
+	\hline
+	$\gamma_{22,20}$ & -0.6182 & 0.0373 \\
+	\hline
+	$\gamma_{23,20}$ & -0.2662 & 0.3688 \\
+	\hline
+	$\gamma_{31,20}$ & -0.2387 & 0.0081 \\
+	\hline
+	$\gamma_{32,20}$ & -0.1708 & 0.0923 \\
+	\hline
+	$\gamma_{33,20}$ & -0.1238 & 0.2212 \\
+	\hline
+	\caption*{Fonte: Elaborado pelo autor}
+\end{longtable}
+
+
+\section{Teste de Cointegração de Johansen}
+
+Os resultados do teste de traço para determinar a presença de cointegração entre as variáveis são apresentados na tabela abaixo. A hipótese nula (\(H_0\)) é de que não existe cointegração para a série em questão.
+
+\begin{table}[h!]
+	\centering
+	\caption{Resultados do Teste de Traço}
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		\textbf{Variável} & \textbf{Estatística do Teste} & \textbf{Valor Crítico (5\%)} & \textbf{Significância} \\ \hline
+		Receita       & 67.34 & 29.7961 & \textbf{Sim} \\ \hline
+		Gastos    & 20.73 & 15.4943 & \textbf{Sim} \\ \hline
+		PIB              &  0.03 &  3.8415 & Não \\ \hline
+	\end{tabular}
+	\caption*{Fonte: Elaborado pelo autor}
+\end{table}
+
+\section{Testes de Diagnóstico dos Resíduos}
+
+Os resultados dos testes Ljung-Box e Anderson-Darling, aplicados aos resíduos do modelo, são apresentados na tabela abaixo. O teste Ljung-Box avalia a hipótese nula (\(H_0\)) de ausência de autocorrelação nos resíduos, enquanto o teste Anderson-Darling verifica a hipótese nula de que os resíduos seguem uma distribuição normal.
+
+\begin{table}[h!]
+	\centering
+	\caption{Resultados dos Testes de Diagnóstico dos Resíduos}
+	\begin{tabular}{|c|c|c|}
+		\hline
+		\textbf{Resíduo} & \textbf{Ljung-Box} & \textbf{Anderson-Darling} \\ \hline
+		Receita & 0.9372 & 0.0773 \\ \hline
+		Gastos  & 0.7587 & 0.0778 \\ \hline
+		PIB     & 0.6036 & 0.7422 \\ \hline
+	\end{tabular}
+	\caption*{Fonte: Elaborado pelo autor}
+\end{table}
+
+
+\end{apendicesenv}
 
 
 
@@ -580,23 +1093,6 @@ O efeito prático do aumento sistêmico da atuação do estado na economia por m
 
 % \begin{apendicesenv}
 
-\begin{itemize}
-	\item $\Delta \mathbf{X}_t = \begin{bmatrix} \Delta T_t & \Delta G_t & \Delta Y_t \end{bmatrix}^\mathsf{T}$
-	\item $Z_{t-1} = \begin{bmatrix}
-			T_{t-1} & G_{t-1} & Y_{t-1} & 1
-	\end{bmatrix}^\mathsf{T}$
-	\item $\Pi = \alpha \beta^\mathsf{T},\text{ No qual:}$
-	\begin{itemize}
-		\item $\alpha = \begin{bmatrix}
-				\alpha_{11} & \alpha{21} \\
-				\alpha_{12} & \alpha{22} \\
-				\alpha_{13} & \alpha{23}
-			\end{bmatrix}$
-            \item \(\beta'\): matriz \(3 \times 2\) que descreve as combinações lineares cointegradas das variáveis.
-        \end{itemize}
-    \item \(\Gamma_i\): matrizes \(3 \times 3\) de coeficientes das diferenças defasadas, que capturam a dinâmica de curto prazo.
-    \item \(u_t\): vetor \(3 \times 1\) de termos de erro.
-\end{itemize}
 
 % % Imprime uma página indicando o início dos apêndices
 %\partapendices
